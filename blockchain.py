@@ -36,3 +36,21 @@ class Block(object): # Methode pour class bloc
             self.previousHash
             ])
         return sha256(hash_string.encode('ascii')).hexdigest()
+    def mineBlock(self): # Trouver le hash valide pour le bloc à base de la difficulté
+        """Find a valid hash for the Block contents, based on difficulty"""
+        while self.calculateHash()[:self.difficulty] != ('0' * self.difficulty):
+            self.nonce += 1
+        return self.calculateHash()
+
+class Blockchain(object): # Methode et attribut pour la classe blockchain
+
+    def init(self, difficulty=4): # Construcuteur pour l#objet blockchain
+        self.index = 0
+        self.difficulty = difficulty
+        # create Genesis Block on the chain of Blocks
+        self.chain = [Block(self.index, 'Genesis Block', '0'*64, self.difficulty)]
+
+    def addBlock(self, Data): # ajoute de nouveau bloc à la blockchain
+        self.index += 1
+        newBlock = Block(self.index, Data, self.getLastBlock().hash, self.difficulty)
+        self.chain.append(newBlock)
